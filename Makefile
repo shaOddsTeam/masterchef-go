@@ -24,3 +24,6 @@ abigen-twindex-swap-router:
 
 abigen-pancake-swap-router:
 	mkdir -p pancake && abigen --bin=./build-pancake-router/PancakeRouter.bin --abi=./build-pancake-router/PancakeRouter.abi --pkg=pancake --out=./pancake/pancake-router.go
+
+abigen-pancake-pair:
+	mkdir -p pancake-pair && abigen --bin=./build-pancake-router/IPancakePair.bin --abi=./build-pancake-router/IPancakePair.abi --pkg=pancakepair --out=./pancake-pair/pancake-pair.go
