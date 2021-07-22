@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"log"
 	"masterchef-go/bep20"
-	"masterchef-go/masterchef"
 	"masterchef-go/pancake"
 	pancakepair "masterchef-go/pancake-pair"
+	stdreference "masterchef-go/std-reference"
 
 	"math/big"
 
@@ -38,42 +38,42 @@ func main() {
 	fmt.Printf("response : %+v\n", response)
 
 	//MASTER CHEF
-	moonMasterContractAddress := common.HexToAddress("0xbe739A112eF6278cEb374Bcad977252Bc3918cA9")
-	moonInstance, err := masterchef.NewMasterchef(moonMasterContractAddress, client)
-	if err != nil {
-		log.Fatal(err)
-	}
+	// moonMasterContractAddress := common.HexToAddress("0xbe739A112eF6278cEb374Bcad977252Bc3918cA9")
+	// moonInstance, err := masterchef.NewMasterchef(moonMasterContractAddress, client)
+	// if err != nil {
+	// 	log.Fatal(err)
+	// }
 
-	for i := int64(0); i < 9; i++ {
-		poolInfo, err := moonInstance.PoolInfo(&bind.CallOpts{}, big.NewInt(i))
-		if err != nil {
-			log.Fatal(err)
-		}
-		fmt.Printf("moon poolinfo %+v\n", poolInfo)
-	}
+	// for i := int64(0); i < 9; i++ {
+	// 	poolInfo, err := moonInstance.PoolInfo(&bind.CallOpts{}, big.NewInt(i))
+	// 	if err != nil {
+	// 		log.Fatal(err)
+	// 	}
+	// 	fmt.Printf("moon poolinfo %+v\n", poolInfo)
+	// }
 
-	chefFoodCourtAddress := common.HexToAddress("0xe43b7c5c4c2df51306cceb7cbc4b2fcc038874f1")
-	foodCourtInstance, err := masterchef.NewMasterchef(chefFoodCourtAddress, client)
-	if err != nil {
-		log.Fatal(err)
-	}
+	// chefFoodCourtAddress := common.HexToAddress("0xe43b7c5c4c2df51306cceb7cbc4b2fcc038874f1")
+	// foodCourtInstance, err := masterchef.NewMasterchef(chefFoodCourtAddress, client)
+	// if err != nil {
+	// 	log.Fatal(err)
+	// }
 
-	for i := int64(0); i < 25; i++ {
-		poolInfo, err := foodCourtInstance.PoolInfo(&bind.CallOpts{}, big.NewInt(i))
-		if err != nil {
-			log.Fatal(err)
-		}
-		fmt.Printf("food court poolinfo %+v\n", poolInfo)
-	}
+	// for i := int64(0); i < 25; i++ {
+	// 	poolInfo, err := foodCourtInstance.PoolInfo(&bind.CallOpts{}, big.NewInt(i))
+	// 	if err != nil {
+	// 		log.Fatal(err)
+	// 	}
+	// 	fmt.Printf("food court poolinfo %+v\n", poolInfo)
+	// }
 
-	for i := int64(0); i < 25; i++ {
-		userAddress := common.HexToAddress("0x330d2c6C22E82fd613830B3f9a97728dFC9B32FF")
-		userInfo, err := foodCourtInstance.UserInfo(&bind.CallOpts{}, big.NewInt(i), userAddress)
-		if err != nil {
-			log.Fatal(err)
-		}
-		fmt.Printf("food court userinfo %+v\n", userInfo)
-	}
+	// for i := int64(0); i < 25; i++ {
+	// 	userAddress := common.HexToAddress("0x330d2c6C22E82fd613830B3f9a97728dFC9B32FF")
+	// 	userInfo, err := foodCourtInstance.UserInfo(&bind.CallOpts{}, big.NewInt(i), userAddress)
+	// 	if err != nil {
+	// 		log.Fatal(err)
+	// 	}
+	// 	fmt.Printf("food court userinfo %+v\n", userInfo)
+	// }
 
 	r := checkSCZLP(0.18, "0x330d2c6C22E82fd613830B3f9a97728dFC9B32FF", "0xb3d2C0cb104CBfA2167Af0D82A12475946B22386")
 	fmt.Printf("scz lp %+v\n", r)
@@ -105,7 +105,7 @@ func main() {
 		log.Fatal(err)
 	}
 	fmt.Printf("scz bal : %+v\n", bal)
-
+	checkStdReference()
 }
 
 const SCZ_BUSD = "0xb3d2C0cb104CBfA2167Af0D82A12475946B22386"
@@ -149,4 +149,23 @@ func checkSCZLP(rate float64, userAddress, lpTokenAddress string) float64 {
 		return float64(result.Mul(_balance, reserve.Reserve0).Div(result, _totalSupply).Int64()) * rate
 	}
 	return float64(result.Mul(_balance, reserve.Reserve1).Div(result, _totalSupply).Int64()) * rate
+}
+
+func checkStdReference() {
+	client, err := ethclient.Dial("https://bsc-dataseed.binance.org/")
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	stdInstance, err := stdreference.NewStdreference(common.HexToAddress("0xDA7a001b254CD22e46d3eAB04d937489c93174C3"), client)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	resp,err:=stdInstance.GetReferenceData(&bind.CallOpts{},"ETH","BNB")
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	fmt.Printf("reference data %+v\n",resp)
 }

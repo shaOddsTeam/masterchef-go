@@ -10,6 +10,9 @@ compile-twindex-swap-router:
 compile-pancake-swap-router: 
 	docker run --rm -v $(PWD):/root ethereum/solc:0.6.6 --abi --bin /root/contracts/PancakeRouter.sol -o /root/build-pancake-router
 
+compile-std-reference:
+	docker run --rm -v $(PWD):/root ethereum/solc:0.6.11 --abi --bin /root/contracts/StdReferenceProxy.sol -o /root/build-std-reference
+
 abigen-masterchef:
 	mkdir -p masterchef && abigen --bin=./build/MasterChef.bin --abi=./build/MasterChef.abi --pkg=masterchef --out=./masterchef/master-chef.go
 
@@ -27,3 +30,6 @@ abigen-pancake-swap-router:
 
 abigen-pancake-pair:
 	mkdir -p pancake-pair && abigen --bin=./build-pancake-router/IPancakePair.bin --abi=./build-pancake-router/IPancakePair.abi --pkg=pancakepair --out=./pancake-pair/pancake-pair.go
+
+abigen-std-reference:
+	mkdir -p std-reference && abigen --bin=./build-std-reference/IStdReference.bin --abi=./build-std-reference/IStdReference.abi --pkg=stdreference --out=./std-reference/std-reference.go
